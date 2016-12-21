@@ -7,4 +7,6 @@ plugins:
         prerelease_channel: null
         type: github_release
 webcam:
-  ffmpeg: /usr/local/bin/ffmpeg
+  ffmpeg: /usr/bin/ffmpeg
+  stream: /webcam/?action=stream
+  snapshot: /webcam/?action=snapshot

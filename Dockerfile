@@ -1,15 +1,24 @@
-FROM python:2.7-alpine
+FROM python:2.7-slim
 MAINTAINER Brian Boucheron <brian@boucheron.org>
 
-RUN apk add --no-cache git build-base linux-headers wget \
+RUN set -ex \
+    && runDeps=' \
+        git \
+        gcc \
+        g++ \
+        make \
+        wget \
+        ffmpeg \
+        ca-certificates \
+        linux-headers-3.16.0-4-amd64 \
+    ' \
+    && echo 'deb http://deb.debian.org/debian jessie-backports main' >> /etc/apt/sources.list \
+    && apt-get update \
+    && apt-get install -y $runDeps --no-install-recommends \
+    && rm -rf /var/lib/apt/lists/* \
     && git clone https://github.com/foosel/OctoPrint.git \
     && cd /OctoPrint \
     && python setup.py install \
-    && cd /tmp \
-    && wget https://johnvansickle.com/ffmpeg/releases/ffmpeg-release-64bit-static.tar.xz \
-    && tar xJf ffmpeg-release-64bit-static.tar.xz \
-    && cp ffmpeg-*-64bit-static/ffmpeg /usr/local/bin \
-    && rm -rf /tmp/ffmpeg* \
     && mkdir /data
 
 VOLUME /data
